@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .labels{
+            display: block;
+        }
+        #btn{
+            display: block;
+        }
+        #logoutBtn{
+            display: block;
+            position: absolute;
+            right:10px;
+            top:10px;
+        }
+        #left{
+            width:50%;
+        }
+        #right{
+            width:50%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/profile">Profile</a>
+            <a href="/calculate">Calculate</a>
+            <a id="logoutBtn" href="/logout">Logout</a>
+        </nav>
+    </header>
+    <hr>
+    <div id="left">
+        <form id="form">
+            <label class="labels">Electricity Usage (kWh):</label>
+            <input type="number" name="electricityUsageKWh" required>
+    
+            <label class="labels">Transportation (Gallons/Month):</label>
+            <input type="number" name="transportationUsageGallonsPerMonth" required>
+    
+            <label class="labels">Short-Haul Flights (per year):</label>
+            <input type="number" name="flightsShortHaul" required>
+    
+            <label class="labels">Medium-Haul Flights (per year):</label>
+            <input type="number" name="flightsMediumHaul" required>
+    
+            <label class="labels">Long-Haul Flights (per year):</label>
+            <input type="number" name="flightsLongHaul" required>
+    
+            <label class="labels">Dietary Choice:</label>
+            <select name="dietaryChoice" required>
+                <option value="Vegan">Vegan</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Pescatarian">Pescatarian</option>
+                <option value="MeatEater">MeatEater</option>
+            </select>
+    
+            <button id="btn" type="submit">Calculate Emissions</button>
+        </form>
+    </div>
+    <hr>
+    <div id="right"></div>
+
+    <script>
+        form = document.getElementById("form");
+        // data = new FormData(form);
+        btn = document.getElementById("btn");
+        disp = document.getElementById("right");
+        form.addEventListener("submit", async function sn(event){
+            event.preventDefault(); // Prevents the form from submitting normally
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries()); 
+        const ready_data = JSON.stringify(data)
+        // return;
+
+        console.log("clicked")
+            let response = await fetch("/calculate", {
+            method:"post",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:ready_data});
+            response.json().then((response)=>{
+                response = JSON.parse(response)
+            right.innerHTML = 
+            
+            `<h2>Your Emissions</h2>
+            <h5>electricityEmissions:${response.electricityEmissions}</h5>
+            <h5>transportationEmissions:${response.transportationEmissions}</h5>
+            <h5>airTravelEmissionsShortHaul:${response.airTravelEmissionsShortHaul}</h5>
+            <h5>airTravelEmissionsMediumHaul:${response.airTravelEmissionsMediumHaul}</h5>
+            <h5>airTravelEmissionsLongHaul:${response.airTravelEmissionsLongHaul}</h5>
+            <h5>totalAirTravelEmissions:${response.totalAirTravelEmissions}</h5>
+            <h5>yearlyElectricityEmissions:${response.yearlyElectricityEmissions}</h5>
+            <h5>yearlyTransportationEmissions:${response.yearlyTransportationEmissions}</h5>
+            <h5>dietaryChoiceEmissions:${response.dietaryChoiceEmissions}</h5>
+            <h5>totalYearlyEmissions:${response.totalYearlyEmissions}</h5>
+            <h3>${response.message}</h3>`
+            })
+            
+            
+        })
+      
+    
+    </script>
+</body>
+</html>

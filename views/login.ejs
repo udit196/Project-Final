@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* min-height: 100vh; */
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-top: 5%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #logo img{
+            width:80px;
+            height:80px;
+            border:5px solid #4285f4;
+            /* border-radius: 100px; */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="username"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .forgot-password a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .signup a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Sign in here</h1>
+        </div>
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="username" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <!-- <div class="forgot-password">
+                <a href="#">Forgot password?</a>
+            </div> -->
+            <button type="submit">Sign in</button>
+            <div class="signup">
+                <a href="/register">Not a member? Start a 14 day free trial</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
