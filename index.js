@@ -192,8 +192,19 @@ else{
 app.get('/profile', async (req, res) => {
   if(req.isAuthenticated()){
     const user = await User.findOne({ username: req.session.user });
+    res.render('profile', {user:user});
+  }
+  else{
+    res.redirect('/login');
+  }
+});
+
+// History Page------------------------------------------------------------------------------------
+app.get('/history', async (req, res) => {
+  if(req.isAuthenticated()){
+    const user = await User.findOne({ username: req.session.user });
     const history = user.emissions; // Get the emissions array
-    res.render('profile', { history: history, user:user});
+    res.render('history', { history: history});
   }
   else{
     res.redirect('/login');

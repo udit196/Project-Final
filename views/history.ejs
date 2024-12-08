@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      
+    </style>
+</head>
+<body>
+
+    <%- include('navbar') %>
+
+    <div>
+      <h2>Your Previous Calculations</h2>
+      <% history.forEach(emission => { %>
+        <h4>Date: <%= emission.date %> , Time: <%= emission.time %></h4>
+        <!-- <li>electricityEmissions: <%= emission.electricityEmissions %></li> 
+        <li>transportationEmissions: <%= emission.transportationEmissions %></li> 
+        <li>airTravelEmissionsShortHaul: <%= emission.airTravelEmissionsShortHaul %></li> 
+        <li>airTravelEmissionsMediumHaul: <%= emission.airTravelEmissionsMediumHaul %></li> 
+        <li>airTravelEmissionsLongHaul: <%= emission.airTravelEmissionsLongHaul %></li> 
+        <li>totalAirTravelEmissions: <%= emission.totalAirTravelEmissions %></li> 
+        <li>yearlyElectricityEmissions: <%= emission.yearlyElectricityEmissions %></li> 
+        <li>yearlyTransportationEmissions: <%= emission.yearlyTransportationEmissions %></li> 
+        <li>dietaryChoiceEmissions: <%= emission.dietaryChoiceEmissions %></li>  -->
+        <li>Carbon FootPrint: <%= emission.totalYearlyEmissions %></li> 
+        <hr>
+      <% }) %>
+    </div>  
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+<!-- <input type="radio" id="option1" name="option" value="option1" />
+<label for="option1">Option 1</label> -->

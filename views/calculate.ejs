@@ -12,12 +12,6 @@
         #btn{
             display: block;
         }
-        #logoutBtn{
-            display: block;
-            position: absolute;
-            right:10px;
-            top:10px;
-        }
         #left{
             width:50%;
         }
@@ -27,14 +21,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="/profile">Profile</a>
-            <a href="/calculate">Calculate</a>
-            <a id="logoutBtn" href="/logout">Logout</a>
-        </nav>
-    </header>
-    <hr>
+    <%- include('navbar') %>
     <div id="left">
         <form id="form">
             <label class="labels">Electricity Usage (kWh):</label>
