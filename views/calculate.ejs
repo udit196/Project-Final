@@ -1,128 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculate Emissions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
 
-    <style>
-        #btn{
-            display: block;
-        }
-    </style>
+    .container {
+      margin-top: 20px;
+    }
+
+    .form-section,
+    .result-section {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .btn {
+      margin-top: 15px;
+    }
+
+    #right h2 {
+      margin-bottom: 20px;
+      color: #003d80;
+    }
+
+    #right h5 {
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    .highlight-message {
+      background-color: #003d80;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    /* Styling for the results table */
+    .details-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .details-table th,
+    .details-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .details-table th {
+      background-color: #003d80;
+      color: white;
+    }
+
+    .details-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .details-table tr:hover {
+      background-color: #e9ecef;
+    }
+
+    .details-table td {
+      color: #555;
+      font-weight: bold;
+    }
+
+    .result-section {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-section h3 {
+      color: #003d80;
+      font-weight: bold;
+    }
+
+    .result-section p {
+      font-size: 1rem;
+      color: #555;
+    }
+  </style>
 </head>
+
 <body>
-    <%- include('navbar') %>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <form id="form">
-                    <label class="labels">Electricity Usage (kWh):</label>
-                    <input type="number" name="electricityUsageKWh" required>
-            
-                    <label class="labels">Transportation (Gallons/Month):</label>
-                    <input type="number" name="transportationUsageGallonsPerMonth" required>
-            
-                    <label class="labels">Short-Haul Flights (per year):</label>
-                    <input type="number" name="flightsShortHaul" required>
-            
-                    <label class="labels">Medium-Haul Flights (per year):</label>
-                    <input type="number" name="flightsMediumHaul" required>
-            
-                    <label class="labels">Long-Haul Flights (per year):</label>
-                    <input type="number" name="flightsLongHaul" required>
-                    
-                    <label class="labels">Dietary Choice:</label>
-                    <select name="dietaryChoice" required>
-                        <option value="Vegan">Vegan</option>
-                        <option value="Vegetarian">Vegetarian</option>
-                        <option value="Pescatarian">Pescatarian</option>
-                        <option value="MeatEater">MeatEater</option>
-                    </select>
+  <%- include('navbar') %>
+  <div class="container">
+    <div class="row g-4 d-flex align-items-start"> <!-- Use d-flex and align-items-start -->
+      <!-- Form Section -->
+      <div class="col-md-6">
+        <div class="form-section">
+          <h3>Calculate Your Carbon Emissions</h3>
+          <form id="form">
+            <label class="labels">Electricity Usage (kWh):</label>
+            <input type="number" name="electricityUsageKWh" class="form-control" min="0" required>
 
-                    <label for ="city" class="labels">City:</label>
-                    <input type="text" id ="city" name="city" required>
+            <label class="labels">Transportation (Gallons/Month):</label>
+            <input type="number" name="transportationUsageGallonsPerMonth" class="form-control" min="0" required>
 
-                    <label for = "country" class="labels">State:</label>
-                    <input type="text"  id ="country" name="country" required>
-            
-                    <button id="loc-btn">Get Location</button>
-                    <button id="btn" type="submit">Calculate Emissions</button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <div id="right"></div>
-            </div>
+            <label class="labels">Short-Haul Flights (per year):</label>
+            <input type="number" name="flightsShortHaul" class="form-control" min="0" value="1" required>
+
+            <label class="labels">Medium-Haul Flights (per year):</label>
+            <input type="number" name="flightsMediumHaul" class="form-control" min="0" value="1" required>
+
+            <label class="labels">Long-Haul Flights (per year):</label>
+            <input type="number" name="flightsLongHaul" class="form-control" min="0" value="1" required>
+
+            <label class="labels">Dietary Choice:</label>
+            <select name="dietaryChoice" class="form-select" required>
+              <option value="Vegan">Vegan</option>
+              <option value="Vegetarian">Vegetarian</option>
+              <option value="Pescatarian">Pescatarian</option>
+              <option value="MeatEater">Meat Eater</option>
+            </select>
+
+            <label for="city" class="labels">City:</label>
+            <input type="text" id="city" name="city" class="form-control" required>
+
+            <label for="country" class="labels">State:</label>
+            <input type="text" id="country" name="country" class="form-control" required>
+
+            <button id="loc-btn" class="btn btn-secondary">Get Location</button>
+            <button id="btn" type="submit" class="btn btn-primary">Calculate Emissions</button>
+          </form>
         </div>
+      </div>
 
+      <!-- Results Section -->
+      <div class="col-md-6">
+        <div class="result-section" id="right">
+          <h3>Your Emissions</h3>
+          <p>Fill in the form to calculate your emissions.</p>
+        </div>
+      </div>
     </div>
-    <hr>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
-    <script>
-        form = document.getElementById("form");
-        btn = document.getElementById("btn");
-        disp = document.getElementById("right");
-        form.addEventListener("submit", async function sn(event){
-            event.preventDefault(); // Prevents the form from submitting normally
+  </div>
+  <hr>
+  <script>
+    form = document.getElementById("form");
+    btn = document.getElementById("btn");
+    disp = document.getElementById("right");
+    form.addEventListener("submit", async function sn(event) {
+      event.preventDefault(); // Prevents the form from submitting normally
 
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData.entries()); 
-        const ready_data = JSON.stringify(data)
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      const ready_data = JSON.stringify(data);
 
-        console.log("clicked")
-            let response = await fetch("/calculate", {
-            method:"post",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body:ready_data});
-            response.json().then((response)=>{
-                response = JSON.parse(response)
-            right.innerHTML = 
-            
-            `<h2>Your Emissions</h2>
-            <h5>electricityEmissions:${response.ElectricityEmissions}</h5>
-            <h5>transportationEmissions:${response.TransportationEmissions}</h5>
-            <h5>airTravelEmissionsShortHaul:${response.AirTravelEmissionsShortHaul}</h5>
-            <h5>airTravelEmissionsMediumHaul:${response.AirTravelEmissionsMediumHaul}</h5>
-            <h5>airTravelEmissionsLongHaul:${response.AirTravelEmissionsLongHaul}</h5>
-            <h5>totalAirTravelEmissions:${response.TotalAirTravelEmissions}</h5>
-            <h5>yearlyElectricityEmissions:${response.YearlyElectricityEmissions}</h5>
-            <h5>yearlyTransportationEmissions:${response.YearlyTransportationEmissions}</h5>
-            <h5>dietaryChoiceEmissions:${response.DietaryChoiceEmissions}</h5>
-            <h5>totalYearlyEmissions:${response.TotalYearlyEmissions}</h5>
-            <h3>${response.Message}</h3>`
-            })
-        })
-    </script>
+      console.log("clicked");
+      let response = await fetch("/calculate", {
+        method: "post",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: ready_data
+      });
+      response.json().then((response) => {
+        response = JSON.parse(response);
+        right.innerHTML = `
+          <h2>Your Emissions</h2>
+          <table class="details-table">
+            <tr>
+              <th>Category</th>
+              <th>Value</th>
+            </tr>
+            <tr>
+              <td>Electricity Usage Emissions</td>
+              <td>${response.ElectricityEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Transportation Emissions</td>
+              <td>${response.TransportationEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Short-Haul Flights Emissions</td>
+              <td>${response.AirTravelEmissionsShortHaul.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Medium-Haul Flights Emissions</td>
+              <td>${response.AirTravelEmissionsMediumHaul.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Long-Haul Flights Emissions</td>
+              <td>${response.AirTravelEmissionsLongHaul.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Total Air Travel Emissions</td>
+              <td>${response.TotalAirTravelEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Yearly Electricity Emissions</td>
+              <td>${response.YearlyElectricityEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Yearly Transportation Emissions</td>
+              <td>${response.YearlyTransportationEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Dietary Choice Emissions</td>
+              <td>${response.DietaryChoiceEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+            <tr>
+              <td>Total Yearly Emissions</td>
+              <td>${response.TotalYearlyEmissions.toFixed(2)} kgCO₂</td>
+            </tr>
+          </table>
+          <div class="highlight-message">${response.Message}</div>`;
+      });
+    });
 
-    <script>
-        const getbutton = document.getElementById("loc-btn");
-        const apiKey = '8bb3690ec19ea5eed14933f74db632b0';
-        getbutton.addEventListener("click", getDetails);
-        
-        var cityField = document.getElementById("city"); 
-        var countryField = document.getElementById("country"); 
+    const getbutton = document.getElementById("loc-btn");
+    const apiKey = '8bb3690ec19ea5eed14933f74db632b0';
+    getbutton.addEventListener("click", getDetails);
 
-        async function getDetails(){
-            var lat = '22.7195687';
-            var lon = '75.8577258';
-            await navigator.geolocation.getCurrentPosition(position => {
-                lat = position.coords.latitude;
-                lon = position.coords.longitude;
-            });
-            const apiURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=8bb3690ec19ea5eed14933f74db632b0`;
-            const response = await fetch(apiURL);
-        
-            const result = await response.json();
-            cityField.value = result[0].name;
-            countryField.value = result[0].state;
+    var cityField = document.getElementById("city");
+    var countryField = document.getElementById("country");
 
-            console.log(cityField);
-            console.log(countryField);
-        }
-        
-    </script>
+    async function getDetails() {
+      var lat = '22.7195687';
+      var lon = '75.8577258';
+      await navigator.geolocation.getCurrentPosition(position => {
+        lat = position.coords.latitude;
+        lon = position.coords.longitude;
+      });
+      const apiURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=8bb3690ec19ea5eed14933f74db632b0`;
+      const response = await fetch(apiURL);
+
+      const result = await response.json();
+      cityField.value = result[0].name;
+      countryField.value = result[0].state;
+
+      console.log(cityField);
+      console.log(countryField);
+    }
+  </script>
 </body>
+
 </html>
