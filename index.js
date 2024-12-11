@@ -49,7 +49,7 @@ app.post('/login',
     const user = await User.findOne({ username });
     req.session.name = user.name;
     req.session.user = req.body.username;
-    res.redirect('/calculate');
+    res.redirect('/profile');
   });
 
 // register page--------------------------------------------------------------------------------------- 
@@ -157,20 +157,19 @@ app.post('/calculate', async (req,res) =>{
     }
 
     const result = {
-      electricityEmissions,
-      transportationEmissions,
-      airTravelEmissionsShortHaul,
-      airTravelEmissionsMediumHaul,
-      airTravelEmissionsLongHaul,
-      totalAirTravelEmissions,
-      yearlyElectricityEmissions,
-      yearlyTransportationEmissions,
-      dietaryChoiceEmissions,
-      totalYearlyEmissions,
-      date:curr_rev_date,
-      time:time,
-      message,
-      timestamp: new Date()
+      ElectricityEmissions:electricityEmissions,
+      TransportationEmissions:transportationEmissions,
+      AirTravelEmissionsShortHaul:airTravelEmissionsShortHaul,
+      AirTravelEmissionsMediumHaul:airTravelEmissionsMediumHaul,
+      AirTravelEmissionsLongHaul:airTravelEmissionsLongHaul,
+      TotalAirTravelEmissions:totalAirTravelEmissions,
+      YearlyElectricityEmissions:yearlyElectricityEmissions,
+      YearlyTransportationEmissions:yearlyTransportationEmissions,
+      DietaryChoiceEmissions:dietaryChoiceEmissions,
+      TotalYearlyEmissions:totalYearlyEmissions,
+      Date:curr_rev_date,
+      Time:time,
+      Message:message
     };
     
     const user =await User.findOne({username:req.session.user})
@@ -205,6 +204,45 @@ app.get('/history', async (req, res) => {
     const user = await User.findOne({ username: req.session.user });
     const history = user.emissions; // Get the emissions array
     res.render('history', { history: history});
+  }
+  else{
+    res.redirect('/login');
+  }
+});
+
+
+// Metadata Page------------------------------------------------------------------------------------
+app.get('/details/:id', async (req, res) => {
+  if(req.isAuthenticated()){
+    try {
+      const emissionId = req.params.id;
+  
+      // Find the user with the specified emission
+      const user = await User.findOne({ 'emissions._id': emissionId });
+  
+      if (!user) {
+        return res.status(404).send('Emission not found');
+      }
+  
+      // Extract the specific emission using Mongoose's subdocument .id() method
+      const emission = user.emissions.id(emissionId);
+  
+      if (!emission) {
+        return res.status(404).send('Emission details not found');
+      }
+  
+      // Send or render the specific emission details
+      res.render('details', { details: emission });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+
+
+    // const id = req.params.id;
+    // const user = await User.findOne({ username: req.session.user });
+    // const metadata = user.emissions.findById(id); // Get the emissions array
+    // res.render('details', { metadata: metadata});
   }
   else{
     res.redirect('/login');
