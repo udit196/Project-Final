@@ -41,13 +41,13 @@
                         <option value="MeatEater">MeatEater</option>
                     </select>
 
-                    <!-- <label class="labels">City:</label>
-                    <input type="text" name="city" required>
+                    <label for ="city" class="labels">City:</label>
+                    <input type="text" id ="city" name="city" required>
 
-                    <label class="labels">Country:</label>
-                    <input type="text" name="country" required> -->
+                    <label for = "country" class="labels">State:</label>
+                    <input type="text"  id ="country" name="country" required>
             
-                    <!-- <button id="loc-btn">Calculate Emissions</button> -->
+                    <button id="loc-btn">Get Location</button>
                     <button id="btn" type="submit">Calculate Emissions</button>
                 </form>
             </div>
@@ -97,15 +97,32 @@
         })
     </script>
 
-    <!-- <script>
+    <script>
         const getbutton = document.getElementById("loc-btn");
-        getbutton.addEventListener("click", ()=>{
-            navigator.geolocation.getCurrentPosition(position => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                console.log(lat, lon);
-            }
-        });
-    </script> -->
+        const apiKey = '8bb3690ec19ea5eed14933f74db632b0';
+        getbutton.addEventListener("click", getDetails);
+        
+        var cityField = document.getElementById("city"); 
+        var countryField = document.getElementById("country"); 
+
+        async function getDetails(){
+            var lat = '22.7195687';
+            var lon = '75.8577258';
+            await navigator.geolocation.getCurrentPosition(position => {
+                lat = position.coords.latitude;
+                lon = position.coords.longitude;
+            });
+            const apiURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=8bb3690ec19ea5eed14933f74db632b0`;
+            const response = await fetch(apiURL);
+        
+            const result = await response.json();
+            cityField.value = result[0].name;
+            countryField.value = result[0].state;
+
+            console.log(cityField);
+            console.log(countryField);
+        }
+        
+    </script>
 </body>
 </html>

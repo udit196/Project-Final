@@ -111,7 +111,9 @@ app.post('/calculate', async (req,res) =>{
       flightsShortHaul,
       flightsMediumHaul,
       flightsLongHaul,
-      dietaryChoice
+      dietaryChoice,
+      city,
+      state
     } = req.body;
     
     const electricityFactor = 0.3978;
