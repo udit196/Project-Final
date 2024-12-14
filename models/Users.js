@@ -4,7 +4,6 @@ const userSchema={
     username:String,
     name:String,
     password:String,
-    // emissions:[]
     emissions:[{
         ElectricityEmissions:String,
         TransportationEmissions:String,
@@ -16,8 +15,8 @@ const userSchema={
         YearlyTransportationEmissions:String,
         DietaryChoiceEmissions:String,
         TotalYearlyEmissions:String,
-        Date:String,
-        Time:String,
+        // Date:String,
+        // Time:String,
         Message:String,
         Timestamp: { type: Date, default: Date.now }
     }]

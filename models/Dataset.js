@@ -15,8 +15,6 @@ const dataSchema={
         YearlyTransportationEmissions:String,
         DietaryChoiceEmissions:String,
         TotalYearlyEmissions:String,
-        Date:String,
-        Time:String,
         Message:String,
         Timestamp: { type: Date, default: Date.now }
     }

@@ -142,17 +142,6 @@ app.post('/calculate', async (req,res) =>{
     const yearlyElectricityEmissions =parseFloat( electricityEmissions) * kgCO2ePerYearFactor;
     const yearlyTransportationEmissions = parseFloat(transportationEmissions) * kgCO2ePerYearFactor;
     const totalYearlyEmissions = yearlyElectricityEmissions + yearlyTransportationEmissions + totalAirTravelEmissions + dietaryChoiceEmissions;
-     
-    const timestamp = new Date();
-    var curr_chat_date = new Date(timestamp);
-    var curr_only_date = curr_chat_date.getDate().toString().padStart(2, '0');
-    var curr_only_month = (curr_chat_date.getMonth() + 1).toString().padStart(2, '0');
-    var curr_only_year = curr_chat_date.getFullYear().toString();
-    var hours = curr_chat_date.getHours().toString().padStart(2, '0');
-    var minutes = curr_chat_date.getMinutes().toString().padStart(2, '0');
-    var time = `${hours}:${minutes}`;
-    var curr_date = `${curr_only_year}-${curr_only_month}-${curr_only_date}`;
-    var curr_rev_date = `${curr_only_date}-${curr_only_month}-${curr_only_year}`;
 
     var message = "Your Emissions are under limit. You can reduce them even further.";
 
@@ -171,8 +160,6 @@ app.post('/calculate', async (req,res) =>{
       YearlyTransportationEmissions:yearlyTransportationEmissions,
       DietaryChoiceEmissions:dietaryChoiceEmissions,
       TotalYearlyEmissions:totalYearlyEmissions,
-      Date:curr_rev_date,
-      Time:time,
       Message:message
     };
     
