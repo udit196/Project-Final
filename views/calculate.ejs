@@ -247,7 +247,7 @@
       lat = position.coords.latitude;
       lon = position.coords.longitude;
 
-      const apiURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=<%=apikey%>`;
+      const apiURL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=<%=apikey%>`;
       const response = await fetch(apiURL);
 
       const result = await response.json();

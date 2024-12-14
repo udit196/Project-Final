@@ -12,7 +12,6 @@ const User = require('./models/Users');
 const Dataset = require('./models/Dataset');
 const passport = require('./auth/passportConfig');
 
-
 // Atlas key
 // const url='mongodb://127.0.0.1:27017/carbon_emissions';
 const url=process.env.url;
