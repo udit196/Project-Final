@@ -237,14 +237,17 @@
     var cityField = document.getElementById("city");
     var countryField = document.getElementById("country");
 
+    var lat;
+    var lon;
     async function getDetails() {
-      var lat = '22.7195687';
-      var lon = '75.8577258';
-      await navigator.geolocation.getCurrentPosition(position => {
-        lat = position.coords.latitude;
-        lon = position.coords.longitude;
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
       });
-      const apiURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=8bb3690ec19ea5eed14933f74db632b0`;
+      
+      lat = position.coords.latitude;
+      lon = position.coords.longitude;
+
+      const apiURL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=<%=apikey%>`;
       const response = await fetch(apiURL);
 
       const result = await response.json();

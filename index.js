@@ -9,11 +9,13 @@ const app = express();
 
 // Models
 const User = require('./models/Users');
+const Dataset = require('./models/Dataset');
 const passport = require('./auth/passportConfig');
 
 
 // Atlas key
-const url='mongodb://127.0.0.1:27017/carbon_emissions';
+// const url='mongodb://127.0.0.1:27017/carbon_emissions';
+const url=process.env.url;
 mongoose.connect(url);
 
 app.set('view engine', 'ejs');
@@ -93,7 +95,8 @@ app.post("/register", async (req,res)=>{
 //Calculate page----------------------------------------------------------------------------------------
 app.get('/calculate', async (req,res) =>{
   if(req.isAuthenticated()){
-    res.render('calculate');
+    const apikey = `${process.env.API_KEY}`;
+    res.render('calculate',{apikey});
   }
   else{
     res.redirect('/login');
@@ -177,6 +180,17 @@ app.post('/calculate', async (req,res) =>{
     const user =await User.findOne({username:req.session.user})
     user.emissions.push(result);
     await user.save();
+
+    await Dataset.updateOne({ username: req.session.user }, // Match the dataset for the logged-in user
+      { 
+        $set: { emissions: result }, // Add the result to the emissions array
+        $setOnInsert: { 
+          username: req.session.user, // Ensure username is set if creating a new document
+          name: user.name // Assuming `user` has a `name` field
+        }
+      },{ upsert: true } // Create the document if it doesn't exist
+    );
+
     res.status(200).json(JSON.stringify(result));
     
   } catch (err) {
