@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 
 const dataSchema={
-    username:String,
-    name:String,
-
+    userID:String,
     emissions:{
         ElectricityEmissions:String,
         TransportationEmissions:String,

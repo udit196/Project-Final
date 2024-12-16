@@ -46,10 +46,6 @@ app.get('/login', function (req, res) {
 app.post('/login', 
   passport.authenticate('local', { failureRedirect: '/'}),
   async function(req, res) {
-    const username = req.body.username;
-    const user = await User.findOne({ username });
-    req.session.name = user.name;
-    req.session.user = req.body.username;
     res.redirect('/profile');
   });
 
@@ -77,8 +73,6 @@ app.post("/register", async (req,res)=>{
           console.log('Error: ', err);
           return res.redirect('register');
         }
-        req.session.name = req.body.name;
-        req.session.user = req.body.username;
         return res.redirect('/profile');
       });
     } else {
@@ -94,6 +88,7 @@ app.post("/register", async (req,res)=>{
 //Calculate page----------------------------------------------------------------------------------------
 app.get('/calculate', async (req,res) =>{
   if(req.isAuthenticated()){
+    // console.log(req.session.passport.user);
     const apikey = `${process.env.API_KEY}`;
     res.render('calculate',{apikey});
   }
@@ -163,16 +158,15 @@ app.post('/calculate', async (req,res) =>{
       Message:message
     };
     
-    const user =await User.findOne({username:req.session.user})
+    const user =await User.findById(req.session.passport.user)
     user.emissions.push(result);
     await user.save();
 
-    await Dataset.updateOne({ username: req.session.user }, // Match the dataset for the logged-in user
+    await Dataset.updateOne({ userID: req.session.passport.user }, // Match the dataset for the logged-in user
       { 
         $set: { emissions: result }, // Add the result to the emissions array
         $setOnInsert: { 
-          username: req.session.user, // Ensure username is set if creating a new document
-          name: user.name // Assuming `user` has a `name` field
+          userID: req.session.passport.user, // Ensure username is set if creating a new document
         }
       },{ upsert: true } // Create the document if it doesn't exist
     );
@@ -192,7 +186,7 @@ else{
 // Profile Page------------------------------------------------------------------------------------
 app.get('/profile', async (req, res) => {
   if(req.isAuthenticated()){
-    const user = await User.findOne({ username: req.session.user });
+    const user = await User.findOne({ _id:req.session.passport.user});
     res.render('profile', {user:user});
   }
   else{
@@ -203,7 +197,7 @@ app.get('/profile', async (req, res) => {
 // History Page------------------------------------------------------------------------------------
 app.get('/history', async (req, res) => {
   if(req.isAuthenticated()){
-    const user = await User.findOne({ username: req.session.user });
+    const user = await User.findOne({ _id:req.session.passport.user });
     const history = user.emissions; // Get the emissions array
     res.render('history', { history: history});
   }
@@ -239,12 +233,6 @@ app.get('/details/:id', async (req, res) => {
       console.error(error);
       res.status(500).send('Server error');
     }
-
-
-    // const id = req.params.id;
-    // const user = await User.findOne({ username: req.session.user });
-    // const metadata = user.emissions.findById(id); // Get the emissions array
-    // res.render('details', { metadata: metadata});
   }
   else{
     res.redirect('/login');
