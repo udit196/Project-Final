@@ -9,7 +9,7 @@ const app = express();
 
 // Models
 const User = require('./models/Users');
-const Dataset = require('./models/Dataset');
+const Place = require('./models/Places');
 const passport = require('./auth/passportConfig');
 
 // Atlas key
@@ -110,9 +110,9 @@ app.post('/calculate', async (req,res) =>{
       flightsLongHaul,
       dietaryChoice,
       city,
-      state
+      country
     } = req.body;
-    
+
     const electricityFactor = 0.3978;
     const transportationFactor = 9.087;
     const kgCO2ePerYearFactor = 12;
@@ -158,18 +158,84 @@ app.post('/calculate', async (req,res) =>{
       Message:message
     };
     
+    
     const user =await User.findById(req.session.passport.user)
     user.emissions.push(result);
+    user.latest_emissions = result;
     await user.save();
 
-    await Dataset.updateOne({ userID: req.session.passport.user }, // Match the dataset for the logged-in user
-      { 
-        $set: { emissions: result }, // Add the result to the emissions array
-        $setOnInsert: { 
-          userID: req.session.passport.user, // Ensure username is set if creating a new document
-        }
-      },{ upsert: true } // Create the document if it doesn't exist
-    );
+    const City = await Place.findOne({name:city,type:"City"});
+
+    if(!City){
+      const newCity = new Place({
+        name:city,
+        type:"City",
+        count:1,
+        ElectricityEmissions : electricityEmissions,
+        TransportationEmissions : transportationEmissions,
+        AirTravelEmissionsShortHaul : airTravelEmissionsShortHaul,
+        AirTravelEmissionsMediumHaul : airTravelEmissionsMediumHaul,
+        AirTravelEmissionsLongHaul : airTravelEmissionsLongHaul,
+        TotalAirTravelEmissions : totalAirTravelEmissions,
+        YearlyElectricityEmissions : yearlyElectricityEmissions,
+        YearlyTransportationEmissions : yearlyTransportationEmissions,
+        DietaryChoiceEmissions : dietaryChoiceEmissions,
+        TotalYearlyEmissions : totalYearlyEmissions
+      });
+
+      await newCity.save();
+    }
+    else{
+      City.count++;
+      City.ElectricityEmissions += electricityEmissions;
+      City.TransportationEmissions += transportationEmissions;
+      City.AirTravelEmissionsShortHaul += airTravelEmissionsShortHaul;
+      City.AirTravelEmissionsMediumHaul += airTravelEmissionsMediumHaul;
+      City.AirTravelEmissionsLongHaul += airTravelEmissionsLongHaul;
+      City.TotalAirTravelEmissions += totalAirTravelEmissions;
+      City.YearlyElectricityEmissions += yearlyElectricityEmissions;
+      City.YearlyTransportationEmissions += yearlyTransportationEmissions;
+      City.DietaryChoiceEmissions += dietaryChoiceEmissions;
+      City.TotalYearlyEmissions += totalYearlyEmissions;
+      await City.save();
+    }
+
+
+    const State = await Place.findOne({name:country,type:"State"});
+
+    if(!State){
+      const newState = new Place({
+        name:country,
+        type:"State",
+        count:1,
+        ElectricityEmissions : electricityEmissions,
+        TransportationEmissions : transportationEmissions,
+        AirTravelEmissionsShortHaul : airTravelEmissionsShortHaul,
+        AirTravelEmissionsMediumHaul : airTravelEmissionsMediumHaul,
+        AirTravelEmissionsLongHaul : airTravelEmissionsLongHaul,
+        TotalAirTravelEmissions : totalAirTravelEmissions,
+        YearlyElectricityEmissions : yearlyElectricityEmissions,
+        YearlyTransportationEmissions : yearlyTransportationEmissions,
+        DietaryChoiceEmissions : dietaryChoiceEmissions,
+        TotalYearlyEmissions : totalYearlyEmissions
+      });
+
+      await newState.save();
+    }
+    else{
+      State.count++;
+      State.ElectricityEmissions += electricityEmissions;
+      State.TransportationEmissions += transportationEmissions;
+      State.AirTravelEmissionsShortHaul += airTravelEmissionsShortHaul;
+      State.AirTravelEmissionsMediumHaul += airTravelEmissionsMediumHaul;
+      State.AirTravelEmissionsLongHaul += airTravelEmissionsLongHaul;
+      State.TotalAirTravelEmissions += totalAirTravelEmissions;
+      State.YearlyElectricityEmissions += yearlyElectricityEmissions;
+      State.YearlyTransportationEmissions += yearlyTransportationEmissions;
+      State.DietaryChoiceEmissions += dietaryChoiceEmissions;
+      State.TotalYearlyEmissions += totalYearlyEmissions;
+      await State.save();
+    }
 
     res.status(200).json(JSON.stringify(result));
     
@@ -236,6 +302,63 @@ app.get('/details/:id', async (req, res) => {
   }
   else{
     res.redirect('/login');
+  }
+});
+
+// For State Charts-------------------------------------------------------------------------------
+app.get('/StateCharts', async (req,res) => {
+  if(req.isAuthenticated()){
+    res.render('StateChart');
+  }
+  else{
+    res.redirect('/login');
+  }
+})
+
+app.get('/state-emissions', async (req, res) => {
+  try {
+    // Fetch all state data with type = "State"
+    const statesData = await Place.find({ type: "State" });
+
+    // Map the data into an array of objects with name and total emissions
+    const emissionsData = statesData.map(state => ({
+      name: state.name, // State name
+      totalYearlyEmissions: state.TotalYearlyEmissions, // Total emissions
+    }));
+
+    res.json(emissionsData);
+  } catch (err) {
+    console.error("Error fetching state emissions:", err);
+    res.status(500).json({ error: "Error fetching data" });
+  }
+});
+
+
+// For City Charts-------------------------------------------------------------------------------
+app.get('/CityCharts', async (req,res) => {
+  if(req.isAuthenticated()){
+    res.render('CityChart');
+  }
+  else{
+    res.redirect('/login');
+  }
+})
+
+app.get('/city-emissions', async (req, res) => {
+  try {
+    // Fetch all state data with type = "State"
+    const citiesData = await Place.find({ type: "City" });
+
+    // Map the data into an array of objects with name and total emissions
+    const emissionsData = citiesData.map(city => ({
+      name: city.name, // City name
+      totalYearlyEmissions: city.TotalYearlyEmissions, // Total emissions
+    }));
+
+    res.json(emissionsData);
+  } catch (err) {
+    console.error("Error fetching state emissions:", err);
+    res.status(500).json({ error: "Error fetching data" });
   }
 });
 

@@ -4,6 +4,20 @@ const userSchema={
     username:String,
     name:String,
     password:String,
+    latest_emissions:{
+        ElectricityEmissions:{ type: Number, default: 0 },
+        TransportationEmissions:{ type: Number, default: 0 },
+        AirTravelEmissionsShortHaul:{ type: Number, default: 0 },
+        AirTravelEmissionsMediumHaul:{ type: Number, default: 0 },
+        AirTravelEmissionsLongHaul:{ type: Number, default: 0 },
+        TotalAirTravelEmissions:{ type: Number, default: 0 },
+        YearlyElectricityEmissions:{ type: Number, default: 0 },
+        YearlyTransportationEmissions:{ type: Number, default: 0 },
+        DietaryChoiceEmissions:{ type: Number, default: 0 },
+        TotalYearlyEmissions:{ type: Number, default: 0 },
+        Message:{ type: String, default: "All Good" },
+        Timestamp: { type: Date, default: Date.now }
+    },
     emissions:[{
         ElectricityEmissions:String,
         TransportationEmissions:String,
@@ -15,8 +29,6 @@ const userSchema={
         YearlyTransportationEmissions:String,
         DietaryChoiceEmissions:String,
         TotalYearlyEmissions:String,
-        // Date:String,
-        // Time:String,
         Message:String,
         Timestamp: { type: Date, default: Date.now }
     }]

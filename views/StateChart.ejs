@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>State-Wise Emissions</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <%- include('navbar') %>
+  <h1>State-Wise Emissions (Pie Chart)</h1>
+  <canvas id="emissionsPieChart" width="400" height="400"></canvas>
+  <script>
+    // Function to fetch emissions data and render the pie chart
+    async function renderPieChart() {
+    try {
+        // Fetch state emissions data from the backend
+        const response = await fetch('/state-emissions');
+        const emissionsData = await response.json();
+
+
+        // Extract state names and their emissions
+        const stateNames = emissionsData.map(data => data.name);
+        const emissionValues = emissionsData.map(data => data.totalYearlyEmissions);
+
+        // Get the canvas context for the chart
+        const ctx = document.getElementById('emissionsPieChart').getContext('2d');
+
+        // Render the pie chart using Chart.js
+        new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: stateNames, // State names as labels
+            datasets: [{
+            label: 'State-wise Emissions',
+            data: emissionValues, // Emissions data as chart values
+            backgroundColor: [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                '#FF9F40', '#E7E9ED', '#F7464A', '#46BFBD', '#FDB45C'
+            ],
+            hoverOffset: 4,
+            }],
+        },
+        options: {
+            plugins: {
+            legend: {
+                position: 'top',
+            },
+            tooltip: {
+                enabled: true,
+            },
+            },
+        },
+        });
+    } catch (err) {
+        console.error("Error rendering pie chart:", err);
+    }
+    }
+
+    // Render the chart when the page loads
+    document.addEventListener('DOMContentLoaded', renderPieChart);
+
+  </script>
+</body>
+</html>
