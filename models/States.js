@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
-const PlaceSchema={
+const StateSchema={
     name:String,
-    type:String, // State or City
-    count:Number, //Number of Samples
+    count:Number,
 
     ElectricityEmissions:Number,
     TransportationEmissions:Number,
@@ -17,4 +16,4 @@ const PlaceSchema={
     TotalYearlyEmissions:Number
 };
 
-module.exports = mongoose.model("Place",PlaceSchema);
+module.exports = mongoose.model("State",StateSchema);

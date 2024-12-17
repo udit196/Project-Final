@@ -8,16 +8,51 @@
 </head>
 <body>
     <%- include('navbar') %>
+    <h2>City-Wise Emissions</h2>
+  <!-- Search Bar and Dropdown -->
+      <label for="stateSelect" class="form-label">Select State:</label>
+      <select id="stateSelect" class="form-select">
+        <option value="">-- Select a State --</option>
+        <!-- Options will be dynamically loaded -->
+      </select>
   <h1>City-Wise Emissions (Pie Chart)</h1>
   <canvas id="emissionsPieChart" width="400" height="400"></canvas>
+
   <script>
+
+    // Event listener for state selection
+    document.getElementById('stateSelect').addEventListener('change', (event) => {
+      const selectedState = event.target.value;
+      console.log(1);
+      renderPieChart(selectedState);
+    });
+
+    // Load the state dropdown when the page loads
+    document.addEventListener('DOMContentLoaded', loadStateDropdown);
+
+    // Function to fetch the list of states and populate the dropdown
+    async function loadStateDropdown() {
+      try {
+        const response = await fetch('/available-states'); // Backend endpoint to fetch available states
+        const states = await response.json();
+
+        const stateSelect = document.getElementById('stateSelect');
+        states.forEach(state => {
+          const option = document.createElement('option');
+          option.value = state.name;
+          option.textContent = state.name;
+          stateSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.error("Error loading states:", err);
+      }
+    }
     // Function to fetch emissions data and render the pie chart
-    async function renderPieChart() {
+    async function renderPieChart(stateName) {
     try {
         // Fetch state emissions data from the backend
-        const response = await fetch('/city-emissions');
+        const response = await fetch(`/city-emissions?state=${encodeURIComponent(stateName)}`);
         const emissionsData = await response.json();
-
 
         // Extract state names and their emissions
         const cityNames = emissionsData.map(data => data.name);
@@ -58,7 +93,7 @@
     }
 
     // Render the chart when the page loads
-    document.addEventListener('DOMContentLoaded', renderPieChart);
+    document.addEventListener('DOMContentLoaded', renderPieChart(statename));
 
   </script>
 </body>

@@ -16,6 +16,8 @@ const userSchema={
         DietaryChoiceEmissions:{ type: Number, default: 0 },
         TotalYearlyEmissions:{ type: Number, default: 0 },
         Message:{ type: String, default: "All Good" },
+        City:{type: String, default:"default"},
+        State:{type: String, default:"default"},
         Timestamp: { type: Date, default: Date.now }
     },
     emissions:[{

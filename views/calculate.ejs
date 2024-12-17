@@ -245,8 +245,10 @@
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
       
-      lat = position.coords.latitude;
-      lon = position.coords.longitude;
+      // lat = position.coords.latitude;
+      // lon = position.coords.longitude;
+      lat = 13.05;
+      lon = 80.27;
 
       const apiURL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=<%=apikey%>`;
       const response = await fetch(apiURL);
