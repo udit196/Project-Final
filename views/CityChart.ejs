@@ -20,6 +20,8 @@
 
   <script>
 
+    let cityChartInstance = null; // Global variable to store the chart instance
+
     // Event listener for state selection
     document.getElementById('stateSelect').addEventListener('change', (event) => {
       const selectedState = event.target.value;
@@ -61,8 +63,13 @@
         // Get the canvas context for the chart
         const ctx = document.getElementById('emissionsPieChart').getContext('2d');
 
+         // Destroy the previous chart instance if it exists
+        if (cityChartInstance) {
+          cityChartInstance.destroy();
+        }
+
         // Render the pie chart using Chart.js
-        new Chart(ctx, {
+        cityChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: cityNames, // State names as labels

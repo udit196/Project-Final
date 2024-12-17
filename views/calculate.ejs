@@ -237,18 +237,14 @@
 
     var cityField = document.getElementById("city");
     var countryField = document.getElementById("country");
-
-    var lat;
-    var lon;
+    
     async function getDetails() {
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
       
-      // lat = position.coords.latitude;
-      // lon = position.coords.longitude;
-      lat = 13.05;
-      lon = 80.27;
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
 
       const apiURL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=<%=apikey%>`;
       const response = await fetch(apiURL);
