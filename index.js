@@ -33,6 +33,7 @@ const calculateRoutes = require('./routes/calculate');
 const historyRoutes = require('./routes/history');
 const stateChartRoutes = require('./routes/stateCharts');
 const cityChartRoutes = require('./routes/cityCharts');
+const datingRoutes = require('./routes/dating');
 
 // Use routes
 app.use(authRoutes);
@@ -41,6 +42,7 @@ app.use(calculateRoutes);
 app.use(historyRoutes);
 app.use(stateChartRoutes);
 app.use(cityChartRoutes);
+app.use(datingRoutes);
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'public', 'get-started.html'));
