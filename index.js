@@ -36,7 +36,7 @@ app.use(express.static('public'));
 
 
 app.get('/', function (req, res) {
-  res.render('get-started',{backButton:'back-button.png',imageFileName:'BgHome.jpg'});
+  res.render('get-started',{imageFileName:'BgHome.jpg'});
 });
 
 // router for login-register form---------------------------------------------------------------------------- 
@@ -89,14 +89,37 @@ app.post("/register", async (req,res)=>{
 //Calculate page----------------------------------------------------------------------------------------
 app.get('/calculate', async (req,res) =>{
   if(req.isAuthenticated()){
-    // console.log(req.session.passport.user);
-    const apikey = `${process.env.API_KEY}`;
-    res.render('calculate',{apikey});
+    res.render('calculate');
   }
   else{
     res.redirect('/login');
   }
 });
+
+app.get('/location', async (req,res) => {
+  if(req.isAuthenticated()){
+    try {
+
+      const apikey = `${process.env.API_KEY}`;
+      const latitude = req.query.lat;
+      const longitude = req.query.lon;
+
+      const apiURL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${apikey}`;
+      const response = await fetch(apiURL);
+      const result = await response.json();
+      
+      res.json(result);
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  }
+  else{
+    res.redirect('/login');
+  }
+
+})
 
 app.post('/calculate', async (req,res) =>{
   if(req.isAuthenticated()){
@@ -289,20 +312,39 @@ else{
 // Profile Page------------------------------------------------------------------------------------
 app.get('/profile', async (req, res) => {
   if(req.isAuthenticated()){
-    const user = await User.findOne({ _id:req.session.passport.user});
-    res.render('profile', {user:user});
+    res.render('profile');
   }
   else{
     res.redirect('/login');
   }
 });
 
+app.get('/api/user', async (req,res) =>{
+  if(req.isAuthenticated()){
+    const user = await User.findOne({ _id:req.session.passport.user});
+    res.json(user);
+  }
+  else{
+    res.status(401).json({error: 'Unauthorized'});
+  }
+})
+
 // History Page------------------------------------------------------------------------------------
 app.get('/history', async (req, res) => {
   if(req.isAuthenticated()){
+    res.render('history');
+  }
+  else{
+    res.redirect('/login');
+  }
+});
+
+app.get('/api/history', async (req, res) => {
+  if(req.isAuthenticated()){
     const user = await User.findOne({ _id:req.session.passport.user });
     const history = user.emissions; // Get the emissions array
-    res.render('history', { history: history});
+  
+    res.json(history);
   }
   else{
     res.redirect('/login');
@@ -399,10 +441,6 @@ app.get('/city-emissions', async (req, res) => {
     res.status(500).json({ error: "Error fetching data" });
   }
 });
-
-app.get('/test', (req,res) => {
-  res.render('test');
-})
 
 app.get('/available-states', async (req,res) => {
   try {

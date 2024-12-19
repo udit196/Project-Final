@@ -57,33 +57,53 @@
   <%- include('navbar') %>
     <div class="container">
       <h2 class="page-title">Your Previous Carbon Emission Records</h2>
-      <div class="row">
-        <% history.slice().reverse().forEach(emission=> { %>
-          <div class="col-md-6">
-            <div class="emission-card">
-              <h5>
-                Date: 
-                <%= new Date(new Date(emission.Timestamp).getTime() + (5 * 60 * 60 * 1000 + 30 * 60 * 1000)).toLocaleDateString('en-IN', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                }) %>,
-                Time: 
-                <%= new Date(new Date(emission.Timestamp).getTime() + (5 * 60 * 60 * 1000 + 30 * 60 * 1000)).toLocaleTimeString('en-IN', { 
-                  hour: '2-digit', 
-                  minute: '2-digit', 
-                  hour12: true 
-                }) %>
-              </h5>
-              <p><strong>Carbon Footprint:</strong>
-                <%= emission.TotalYearlyEmissions %> kgCO₂
-              </p>
-              <a href="details/<%= emission.id %>" class="details-link">View Details</a>
-            </div>
-          </div>
-          <% }) %>
+      <div class="row" id="list-print">
+        <!-- History loads here dynamically -->
       </div>
     </div>
-</body>
 
+    <script>
+      document.addEventListener('DOMContentLoaded', async () =>{
+        try{
+          const response = await fetch('/api/history');
+          if (!response.ok) throw new Error('Failed to fetch user data.');
+    
+          const history = await response.json();
+          const listElement = document.getElementById('list-print');
+    
+          history.slice().reverse().forEach(emission => {
+            listElement.innerHTML += `<div class="col-md-6">
+                <div class="emission-card">
+                  <h5>
+                    Date: 
+                      ${
+                      new Date(new Date(emission.Timestamp).getTime() + (5 * 60 * 60 * 1000 + 30 * 60 * 1000)).toLocaleDateString('en-IN', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })
+                      }
+                    Time:
+                      ${ 
+                      new Date(new Date(emission.Timestamp).getTime() + (5 * 60 * 60 * 1000 + 30 * 60 * 1000)).toLocaleTimeString('en-IN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: true 
+                      })
+                    }
+                  </h5>
+                  <p><strong>Carbon Footprint:</strong>
+                     ${emission.TotalYearlyEmissions} kgCO₂
+                  </p>
+                  <a href="details/${emission.id}" class="details-link">View Details</a>
+                </div>
+              </div>`
+          });
+        }
+        catch(err){
+          console.log(err);
+        }
+      });
+    </script>
+</body>
 </html>

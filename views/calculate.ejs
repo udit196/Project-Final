@@ -246,10 +246,9 @@
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
 
-      const apiURL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=<%=apikey%>`;
-      const response = await fetch(apiURL);
-
+      const response = await fetch(`/location?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`);
       const result = await response.json();
+
       cityField.value = result[0].name;
       countryField.value = result[0].state;
 

@@ -87,24 +87,47 @@
         <div class="profile-header">
           <h2>User Profile</h2>
         </div>
-        <div class="profile-avatar">
-          <%= user.profilePicture ? `<img src="${user.profilePicture}" alt="Profile Picture">` :
-            user.name.charAt(0).toUpperCase() %>
+        <div class="profile-avatar" id="profile-avatar">
+          <!-- Photo Wagerh -->
         </div>
 
-        <div class="profile-details">
-          <p><span>Name:</span>
-            <%= user.name %>
-          </p>
-          <p><span>Username:</span>
-            <%= user.username %>
-          </p>
+        <div class="profile-details" id="profile-details">
+          <!-- Naam Username -->
         </div>
 
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', getProfile);
+
+      async function getProfile() {
+        try{
+          const response = await fetch('/api/user');
+          if (!response.ok) throw new Error('Failed to fetch user data.');
+
+          const user = await response.json();
+          console.log(user);
+          const avatarElement = document.getElementById('profile-avatar');
+
+          if (user.profilePicture) {
+            avatarElement.innerHTML = `<img src="${user.profilePicture}" alt="Profile Picture">`;
+          } else {
+            avatarElement.textContent = user.name.charAt(0).toUpperCase();
+          }
+
+          const detailsElement = document.getElementById('profile-details');
+          detailsElement.innerHTML = `
+            <p><span>Name:</span> ${user.name}</p>
+            <p><span>Username:</span> ${user.username}</p>
+          `;
+        }
+        catch (err) {
+            console.error("Error rendering User Profile", err);
+        }
+      }
+    </script>
 </body>
 
 </html>
