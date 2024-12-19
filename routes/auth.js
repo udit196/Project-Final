@@ -1,11 +1,12 @@
 const express = require('express');
 const passport = require('../auth/passportConfig');
 const User = require('../models/Users');
+const path = require('path');
 const router = express.Router();
 
 // Login route
 router.get('/login', (req, res) => {
-  res.render('login');
+    res.sendFile(path.join(__dirname, '../public', 'login.html'));
 });
 
 router.post(
@@ -18,10 +19,7 @@ router.post(
 
 // Register route
 router.get('/register', (req, res) => {
-  res.render('register', {
-    errorMessage: req.flash('error'),
-    successMessage: req.flash('success'),
-  });
+  res.sendFile(path.join(__dirname, '../public', 'register.html'));
 });
 
 router.post('/register', async (req, res) => {
@@ -41,12 +39,10 @@ router.post('/register', async (req, res) => {
         return res.redirect('/profile');
       });
     } else {
-      req.flash('error', 'User already exists with this email');
       res.redirect('/register');
     }
   } catch (err) {
     console.error(err);
-    req.flash('error', 'An error occurred while signing in');
     res.redirect('/register');
   }
 });

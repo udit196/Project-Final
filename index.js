@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');   
 const bodyParser = require('body-parser');  
-const flash = require('connect-flash');
+// const flash = require('connect-flash');
 const session = require('express-session')
+const path = require('path');
 require('dotenv').config('./.env');
 
 const url=process.env.url;
@@ -12,7 +13,6 @@ const app = express();
 mongoose.connect(url);
 
 // Middleware
-app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
@@ -21,7 +21,7 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(flash());
+// app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
@@ -31,17 +31,19 @@ const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
 const calculateRoutes = require('./routes/calculate');
 const historyRoutes = require('./routes/history');
-const chartRoutes = require('./routes/charts');
+const stateChartRoutes = require('./routes/stateCharts');
+const cityChartRoutes = require('./routes/cityCharts');
 
 // Use routes
 app.use(authRoutes);
 app.use(profileRoutes);
 app.use(calculateRoutes);
 app.use(historyRoutes);
-app.use(chartRoutes);
+app.use(stateChartRoutes);
+app.use(cityChartRoutes);
 
 app.get('/', function (req, res) {
-  res.render('get-started',{imageFileName:'BgHome.jpg'});
+  res.sendFile(path.join(__dirname, 'public', 'get-started.html'));
 });
 
 // ------------------------------------------------------------------------------------------------------

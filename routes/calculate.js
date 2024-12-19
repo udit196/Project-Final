@@ -2,11 +2,12 @@ const express = require('express');
 const User = require('../models/Users');
 const City = require('../models/Cities');
 const State = require('../models/States');
+const path = require('path');
 const router = express.Router();
 
 router.get('/calculate', async (req,res) =>{
     if(req.isAuthenticated()){
-        res.render('calculate');
+        res.sendFile(path.join(__dirname, '../public', 'calculate.html'));
     }
     else{
         res.redirect('/login');
