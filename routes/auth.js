@@ -23,12 +23,12 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { username, name, password } = req.body;
+  const { username, name, gender, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ username });
     if (!existingUser) {
-      const newUser = new User({ username, name, password });
+      const newUser = new User({ username, name, gender, password });
       await newUser.save();
 
       req.login(newUser, (err) => {

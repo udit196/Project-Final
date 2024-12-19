@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const userSchema={
     username:String,
     name:String,
+    gender:String,
     password:String,
     latest_emissions:{
         ElectricityEmissions:{ type: Number, default: 0 },
