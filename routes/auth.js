@@ -11,7 +11,7 @@ router.get('/login', (req, res) => {
 
 router.post(
   '/login',
-  passport.authenticate('local', { failureRedirect: '/' }),
+  passport.authenticate('local', { failureRedirect: '/login?error=Invalid%20username%20or%20password' }),
   (req, res) => {
     res.redirect('/profile');
   }
@@ -23,27 +23,28 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { username, name, gender, password } = req.body;
+  const { username, name, gender, DOB, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ username });
+
     if (!existingUser) {
-      const newUser = new User({ username, name, gender, password });
+      const newUser = new User({ username, name, gender, DOB, password });
       await newUser.save();
 
       req.login(newUser, (err) => {
         if (err) {
-          console.log('Error:', err);
-          return res.redirect('/register');
+          console.error('Error:', err);
+          return res.redirect(`/register?error=${encodeURIComponent('Something went wrong. Please try again.')}`);
         }
         return res.redirect('/profile');
       });
     } else {
-      res.redirect('/register');
+      return res.redirect(`/register?error=${encodeURIComponent('Username is already taken.')}`);
     }
   } catch (err) {
     console.error(err);
-    res.redirect('/register');
+    return res.redirect(`/register?error=${encodeURIComponent('An unexpected error occurred. Please try again.')}`);
   }
 });
 

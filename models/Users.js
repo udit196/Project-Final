@@ -4,6 +4,10 @@ const userSchema={
     username:String,
     name:String,
     gender:String,
+    DOB:Date,
+    profilePicture: {
+        type: Buffer, // Store binary data
+    },
     password:String,
     latest_emissions:{
         ElectricityEmissions:{ type: Number, default: 0 },

@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');   
-const bodyParser = require('body-parser');  
-// const flash = require('connect-flash');
+const bodyParser = require('body-parser');
 const session = require('express-session')
+
 const path = require('path');
 require('dotenv').config('./.env');
 
@@ -21,7 +21,6 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));

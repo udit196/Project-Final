@@ -120,7 +120,7 @@
                     <a class="nav-link" href="/history">User-History</a>
                     <a class="nav-link" href="/StateCharts">State-Wise</a>
                     <a class="nav-link" href="/CityCharts">City-Wise</a>
-                    <a class="nav-link" href="/funGame">FunGame</a>
+                    <a class="nav-link" href="/funGame">Carbon-Dating</a>
                     <a class="nav-link ms-auto" href="/logout">Logout</a>
                 </div>
             </div>
@@ -159,10 +159,12 @@
             </select>
 
             <label for="city" class="labels">City:</label>
-            <input type="text" id="city" name="city" class="form-control" required>
+            <input type="text" id="city" name="city" class="form-control" disabled required>
+            <input type="hidden" name="city" value="City Name">
 
             <label for="country" class="labels">State:</label>
-            <input type="text" id="country" name="country" class="form-control" required>
+            <input type="text" id="country" name="country" class="form-control" disabled required>
+            <input type="hidden" name="country" value="State Name">
 
             <button id="loc-btn" class="btn btn-secondary">Get Location</button>
             <button id="btn" type="submit" class="btn btn-primary">Calculate Emissions</button>
@@ -255,7 +257,6 @@
     });
 
     const getbutton = document.getElementById("loc-btn");
-    const apiKey = '8bb3690ec19ea5eed14933f74db632b0';
     getbutton.addEventListener("click", getDetails);
 
     var cityField = document.getElementById("city");
