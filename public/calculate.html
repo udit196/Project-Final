@@ -136,10 +136,10 @@
           <h3>Calculate Your Carbon Emissions</h3>
           <form id="form">
             <label class="labels">Electricity Usage (kWh):</label>
-            <input type="number" name="electricityUsageKWh" class="form-control" min="0" required>
+            <input type="number" name="electricityUsageKWh" class="form-control" min="0" value="1" required>
 
             <label class="labels">Transportation (Gallons/Month):</label>
-            <input type="number" name="transportationUsageGallonsPerMonth" class="form-control" min="0" required>
+            <input type="number" name="transportationUsageGallonsPerMonth" class="form-control" min="0" value="1" required>
 
             <label class="labels">Short-Haul Flights (per year):</label>
             <input type="number" name="flightsShortHaul" class="form-control" min="0" value="1" required>
@@ -159,14 +159,14 @@
             </select>
 
             <label for="city" class="labels">City:</label>
-            <input type="text" id="city" name="city" class="form-control" disabled required>
-            <input type="hidden" name="city" value="City Name">
+            <input type="text" id="city" class="form-control" disabled required>
+            <input type="hidden" id="hiddenCity" name="city" required>
 
             <label for="country" class="labels">State:</label>
-            <input type="text" id="country" name="country" class="form-control" disabled required>
-            <input type="hidden" name="country" value="State Name">
+            <input type="text" id="country" class="form-control" disabled required>
+            <input type="hidden" id="hiddenCountry" name="country" required>
 
-            <button id="loc-btn" class="btn btn-secondary">Get Location</button>
+            <button id="loc-btn" type="button" class="btn btn-secondary">Get Location</button>
             <button id="btn" type="submit" class="btn btn-primary">Calculate Emissions</button>
           </form>
         </div>
@@ -187,9 +187,11 @@
     form = document.getElementById("form");
     btn = document.getElementById("btn");
     disp = document.getElementById("right");
+
     form.addEventListener("submit", async function sn(event) {
       event.preventDefault(); // Prevents the form from submitting normally
 
+      await getDetails();
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
       const ready_data = JSON.stringify(data);
@@ -257,28 +259,34 @@
     });
 
     const getbutton = document.getElementById("loc-btn");
-    getbutton.addEventListener("click", getDetails);
+    getbutton.addEventListener("click", getDetails)
 
-    var cityField = document.getElementById("city");
-    var countryField = document.getElementById("country");
-    
-    async function getDetails() {
+      async function getDetails(){
+
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
       
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
-
+      
       const response = await fetch(`/location?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`);
       const result = await response.json();
+
+      var cityField = document.getElementById("city");
+      var countryField = document.getElementById("country");
+
+      var hiddencityField = document.getElementById("hiddenCity");
+      var hiddencountryField = document.getElementById("hiddenCountry");
 
       cityField.value = result[0].name;
       countryField.value = result[0].state;
 
-      console.log(cityField);
-      console.log(countryField);
+      hiddencityField.value = result[0].name;
+      hiddencountryField.value = result[0].state;
+
     }
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
