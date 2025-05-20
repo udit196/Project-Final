@@ -2,14 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');   
 const bodyParser = require('body-parser');
 const session = require('express-session')
-
 const path = require('path');
 require('dotenv').config('./.env');
+const app = express();
 
-const url=process.env.url;
+//Models
 const passport = require('./auth/passportConfig');
 
-const app = express();
+//MongoDb
+const url=process.env.url;
 mongoose.connect(url);
 
 // Middleware

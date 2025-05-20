@@ -52,8 +52,6 @@ router.post('/calculate', async (req,res) =>{
                 country
             } = req.body;
 
-            console.log(req.body);
-
             const electricityFactor = 0.3978;
             const transportationFactor = 9.087;
             const kgCO2ePerYearFactor = 12;

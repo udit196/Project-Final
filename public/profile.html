@@ -139,7 +139,7 @@
           <h2>User Profile</h2>
         </div>
         <div class="profile-avatar" id="profile-avatar">
-          <!-- Photo Wagerh -->
+          <img src="./images/dp.png" alt="Profile Picture">
         </div>
         <!-- Photo Update button-->
         <div class="form-group">
@@ -161,15 +161,19 @@
         const avatarElement = document.getElementById('profile-avatar');
         try {
           const response = await fetch('/api/profile-picture');
-          if (!response.ok) throw new Error('Failed to fetch profile picture.');
+          if (!response.ok){
+            // avatarElement.innerHTML = user.name.charAt(0).toUpperCase();
+            throw new Error('Failed to fetch profile picture.');
+          } 
+          else{
+            const blob = await response.blob(); // Convert the response to a Blob
+            const imageUrl = URL.createObjectURL(blob); // Create a URL for the Blob
+  
+            avatarElement.innerHTML = `<img src="${imageUrl}" alt="Goodday">`;
+          }
 
-          const blob = await response.blob(); // Convert the response to a Blob
-          const imageUrl = URL.createObjectURL(blob); // Create a URL for the Blob
-
-          avatarElement.innerHTML = `<img src="${imageUrl}" alt="Profile Picture">`;
         } catch (error) {
           console.error('Error:', error);
-          avatarElement.textContent = 'No profile picture available.';
         }
       }
       

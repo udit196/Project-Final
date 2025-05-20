@@ -85,7 +85,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // const emissionId = window.location.pathname.split('/').pop(); // Get emission ID from URL
             const emissionId = window.location.toString().split('?id=')[1]; // Get emission ID from URL
             try {
                 // Fetch the emission details from the backend API

@@ -55,5 +55,18 @@ router.get('/api/profile-picture', async (req, res) => {
   }
 });
 
+router.get('/api/profile-picture/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    // Send the binary image as Base64
+    res.set('Content-Type', 'image/png'); // Change to the appropriate format if necessary
+    res.send(user.profilePicture);
+  } catch (error) {
+    console.error('Error fetching profile picture:', error);
+    res.status(500).send({ message: 'Error fetching profile picture' });
+  }
+});
+
 
 module.exports = router;

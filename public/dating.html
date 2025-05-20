@@ -115,6 +115,17 @@
       color: #ff3f5d;
       margin-bottom: 0.5rem;
     }
+
+    .match-card .match-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border: 3px solid #fff;
+    }
+
   </style>
 </head>
 
@@ -234,9 +245,21 @@
         }
 
         // Generate match cards
-        matches.forEach(match => {
+        matches.forEach(async match => {
+
+          let imageUrl = './images/dp.png'; // fallback
+          try {
+            const imgResponse = await fetch(`/api/profile-picture/${match._id}`);
+            if (imgResponse.ok) {
+              const imgBlob = await imgResponse.blob();
+              imageUrl = URL.createObjectURL(imgBlob);
+            }
+          } catch (error) {
+            console.error(`Failed to fetch image for ${match.name}`, error);
+          }
             const matchCard = `
                 <div class="match-card">
+                    <img src="${imageUrl}" class="match-img" alt="${match.name}'s Picture">
                     <h5>${match.name} ❤️</h5>
                     <p class="match-emissions">Carbon Emissions: ${match.latest_emissions.TotalYearlyEmissions} kg CO₂/year</p>
                     <p>${match.gender}</p>
